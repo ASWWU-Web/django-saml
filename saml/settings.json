@@ -1,0 +1,33 @@
+{
+    "strict": true,
+    "debug": true,
+    "sp": {
+        "entityId": "https://saml.aswwu.com/metadata/",
+        "assertionConsumerService": {
+            "url": "https://saml.aswwu.com/?acs",
+            "binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+        },
+        "singleLogoutService": {
+            "url": "https://saml.aswwu.com/?sls",
+            "binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
+        },
+        "NameIDFormat": "urn:oasis:names:tc:SAML:2.0:nameid-format:persistent",
+        "x509cert": "",
+        "privateKey": ""
+    },
+    "idp": {
+        "entityId": "https://adfs.wallawalla.edu/adfs/services/trust",
+        "singleSignOnService": {
+            "url": "https://adfs.wallawalla.edu/adfs/ls/",
+            "binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
+        },
+        "singleLogoutService": {
+            "url": "https://adfs.wallawalla.edu/adfs/ls/",
+            "binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
+        },
+        "x509certMulti": {
+          "signing": ["MIIC4jCCAcqgAwIBAgIQENpIYoP91ZxPPKyFUXmZ0DANBgkqhkiG9w0BAQsFADAtMSswKQYDVQQDEyJBREZTIFNpZ25pbmcgLSBhZGZzLndhbGxhd2FsbGEuZWR1MB4XDTE3MDUzMTIwNDA1MFoXDTE4MDUzMTIwNDA1MFowLTErMCkGA1UEAxMiQURGUyBTaWduaW5nIC0gYWRmcy53YWxsYXdhbGxhLmVkdTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAJzIl7lV1GrCWNZBDCAkYuJci3BmVMmxuuOJu13g2SJ3FQvI87Wyh16+9kmRLoCU5EvR+MhFpgAh66xdJdJpKb5qaOBDuuLUJyg7H0Mnr0Vhca1wvhPmt6FGCOHMuUhBikEcWFPJGehxTjtnDy9Br9iMML/3geVVK2TUz4suPWWRv+booyYqeKlsV7+SzsA1y04lXhWk3EmfQtR7IdPPt9oc8GZ8Ar1j9U3ZqqyynjhJPvaJbLQjt6VUdndrsIyVqc6auKfY0mJbbXjYBLo5sWJg3xlPNbJEYyks9ILmDhQtm2+GqCm6QWuAil5MZ4BW0h6dI8rNCcFaDyEPF+Mrj0sCAwEAATANBgkqhkiG9w0BAQsFAAOCAQEAYnEJjZJA1gySKuOcNCSKtmVdIr325l0h0Z5qB5M+R/F0+QRq1BxaOdtYomDDOf7q7FlKrSb8hlxsq26I52+kf+6SGd/nFni0KrXsBdTP2XbgoprQobJZNMBI2CT9VjQr1bZw/MDmc+sGyD71R4a4231rih6RQbMNE8hzDgv5+17eoHeEJs0iz7kIIrceI933kFpo2+WGAPczIo68YAxRX1UHI6vnWCLbgI0pN9Gwty6SGXRsym5Jyt6qzx//Pa3WHh2KmGHEUGpbmO4U/fijrAprwD/nIYjnTzJGy0GqnS93eOPIN/Vk4nDpt9EzubXV9uClMrDfGFv4pJCMk+aIWw==", "MIIC4jCCAcqgAwIBAgIQIkjyxRlmBYFMtDqNqOW21zANBgkqhkiG9w0BAQsFADAtMSswKQYDVQQDEyJBREZTIFNpZ25pbmcgLSBhZGZzLndhbGxhd2FsbGEuZWR1MB4XDTE4MDUxMTIxMjQ0OFoXDTE5MDUxMTIxMjQ0OFowLTErMCkGA1UEAxMiQURGUyBTaWduaW5nIC0gYWRmcy53YWxsYXdhbGxhLmVkdTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAL4SoJZP3QegP7pmPNPj7Esf7syqva0DUyS2TW2YYwEdXlhzZPkPO6hs9UXIV1SC+I/MZzIw6ZXvR/Olzz24FAfegbCcSChCLBBv/ae4YPyHMNMJ/Say79yDC61TecilajyOAJVADgobQFtMtCWzvYOXF5SCrXx+hCpJLCN19swDFULde7+6ZzlckoTT+HrD/QYIVHPSzN9h5fW0/fu71xAyZF/cBT4r7dMHZyGIENKMyhjqLGqYqORdNibI30huPXFIbvnHN2/AD5jPZkXQtQxcGIV1KrsFs9aQVE1oHxbtTQRX0mQcT6/atTr0TR0flq15WQ2rDSakRU9E5IbpxykCAwEAATANBgkqhkiG9w0BAQsFAAOCAQEApqWi1RG6W4r4o49CzvAJoSSgCYeeLcY1Qg/P9xQSCl0DOhEfza7gdXF4IPC17R+HH+kIUDECCpl4D1s8nEe+6iHYvezUERgtsNb8koWaiVilQllo6NMUOir+4ezhj5EHyGPYRNoNzzpqeSyTvgjR7z1rd424XQ/3bIoTngdr00yF/+0Cmr6iE6qqX9KFRFBdN7+Tc6pgeRqpwgHGuoNDM4PqEJgaaQ4CsjdppAzhmWzn5o4M9AlMJkztdrZF+T7uswAykePI/4g6gFoohzhhUgXZDXeC/Ie2ycUqES2ywwVTuS/yThorRA/p/IsHCN5R3nA99pTlfyPA2MciKNn5uA=="],
+          "encryption": ["MIIC6DCCAdCgAwIBAgIQN83alBXeO5xI8kuNR0OB4zANBgkqhkiG9w0BAQsFADAwMS4wLAYDVQQDEyVBREZTIEVuY3J5cHRpb24gLSBhZGZzLndhbGxhd2FsbGEuZWR1MB4XDTE4MDUxMTIxMjQ0NFoXDTE5MDUxMTIxMjQ0NFowMDEuMCwGA1UEAxMlQURGUyBFbmNyeXB0aW9uIC0gYWRmcy53YWxsYXdhbGxhLmVkdTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAJ5ufIzz/bPPl/LPTPkJ+/gJMN69D7R46qTqpt6PbIglhVFDDnb3I2+OayMJRNG0NaKkFR80Q8rXmVN71flPpJDSMZhxurh/zw3PUNAP4cG6p6warYZlkE1C9weJshMHRKmgF1t7yNIroA/f+RuJUmFqTbS28YGfwE7DU4F8v+YY4IpuPzN0i4K8nQMNbxF9K1Z7+jWgIUsBeKaQYutnEvOJXtdfP1aKSRri3Fbcj9StIM8ItctteC/JcaJZqz4k5mWvL2DR5nJ5s0QZ1NwAbA2yZrgPZnoJVtaBXZwbnst09N55g5B9+/HWLsjVEyA4qrlnw4UMIRzfuF8VetiuRdsCAwEAATANBgkqhkiG9w0BAQsFAAOCAQEAQSfO8+aQdfeFYQW0ekniZyVDqjh+mdo62AdDj7D+5ZIPt/Fws6EhQYAmJGiIFsS2T/U8ih6wprqmA1AoRYCVjFx8TAAd4MXdK81GaZr8VV9E/PGtyU3eDbuJd57hJGeDBgaZGFsOsp0XYUYOWbHkQHEXVE0nf2JEv2fSwSqVxUjb6geJ4itxPeh0MTp3l/vKtaUXSmZNljahKerfHF1NHZo5tpa0VN4IWQipVKKdV3KUzo0vxfMbAEu2G2dMsd1cREPR5aVzjwKHDgnzJb//soxg1W5XOf0iY1jpzfe74mx33e9dx+t/0qJhVo0rCq7nADyahNl3vi1XvSRpPRY+mg=="]
+        }
+    }
+}
