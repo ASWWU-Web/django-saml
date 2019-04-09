@@ -2,8 +2,8 @@ FROM python:3.7-alpine3.9
 
 MAINTAINER aswwu.webmaster@wallawalla.edu
 
-RUN apk add mariadb-dev pcre pcre-dev && \
-    apk add --no-cache --virtual .build-deps gcc libc-dev linux-headers libffi-dev libxml2-dev libxslt-dev xmlsec-dev && \
+RUN apk add mariadb-dev pcre pcre-dev libxml2 xmlsec-dev && \
+    apk add --no-cache --virtual .build-deps gcc libc-dev linux-headers libffi-dev libxslt-dev && \
     pip install pipenv && \
     pip install uwsgi && \
     set -e && \
