@@ -26,7 +26,7 @@ else:
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-SECRET_KEY = os.getenv('SECRET_KEY', 'dev')
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'dev')
 
 ALLOWED_HOSTS = []
 

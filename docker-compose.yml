@@ -1,0 +1,14 @@
+version: "3"
+services:
+  saml:
+    environment:
+      - DJANGO_ENV
+      - DJANGO_SECRET_KEY
+    image: "aswwu/django-saml:${DJANGO_TAG}"
+    build: .
+    container_name: django_saml
+    volumes:
+      - "${SAML_CERTS_DIR}:/home/django/django_server/saml/certs"
+    restart: on-failure
+    ports:
+      - "${DJANGO_PORT}:8000"
