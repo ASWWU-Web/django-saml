@@ -14,13 +14,21 @@ def init_saml_auth(req):
     return auth
 
 
+def get_port(request):
+    if settings.USE_X_FORWARDED_PORT and 'HTTP_X_FORWARDED_PORT' in request.META:
+        port = request.META['HTTP_X_FORWARDED_PORT']
+    else:
+        port = request.META['SERVER_PORT']
+    return port
+
+
 def prepare_django_request(request):
     # If server is behind proxys or balancers use the HTTP_X_FORWARDED fields
     result = {
         'https': 'on' if request.is_secure() else 'off',
         'http_host': request.META['HTTP_HOST'],
         'script_name': request.META['PATH_INFO'],
-        'server_port': request.META['SERVER_PORT'],
+        'server_port': get_port(request),
         'get_data': request.GET.copy(),
         # Uncomment if using ADFS as IdP, https://github.com/onelogin/python-saml/pull/144
         # 'lowercase_urlencoding': True,
@@ -43,7 +51,7 @@ def index(request):
         return HttpResponseRedirect(auth.login())
     elif 'sso2' in req['get_data']:
         return_to = OneLogin_Saml2_Utils.get_self_url(req) + reverse('attrs')
-        return HttpResponseRedirect(auth.login(return_to))
+        return HttpResponseRedirect(auth.login(return_to='https://www.aswwu.com'))
     elif 'slo' in req['get_data']:
         name_id = None
         session_index = None

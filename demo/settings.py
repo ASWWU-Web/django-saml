@@ -14,21 +14,21 @@ import os
 
 # set security settings
 if os.getenv('DJANGO_ENV') == 'prod':
-    DEBUG = False
-    ALLOWED_HOSTS = ['.aswwu.com']
+    DEBUG = True
+    ALLOWED_HOSTS = ['saml.aswwu.com']
     SECURE_CONTENT_TYPE_NOSNIFF = True
     SECURE_BROWSER_XSS_FILTER = True
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     X_FRAME_OPTIONS = 'DENY'
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    USE_X_FORWARDED_PORT = True
 else:
     DEBUG = True
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'dev')
-
-ALLOWED_HOSTS = []
 
 # Application definition
 
@@ -44,7 +44,6 @@ INSTALLED_APPS = (
 MIDDLEWARE = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
