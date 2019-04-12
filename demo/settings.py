@@ -14,7 +14,7 @@ import os
 
 # set security settings
 if os.getenv('DJANGO_ENV') == 'prod':
-    DEBUG = True
+    DEBUG = False
     ALLOWED_HOSTS = [os.getenv('SAML_URL')]
     SECURE_CONTENT_TYPE_NOSNIFF = True
     SECURE_BROWSER_XSS_FILTER = True
