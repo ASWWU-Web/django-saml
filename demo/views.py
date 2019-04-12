@@ -1,3 +1,8 @@
+import json
+import os
+import requests
+from http.cookies import SimpleCookie
+
 from django.conf import settings
 from django.urls import reverse
 from django.http import (HttpResponse, HttpResponseRedirect,
@@ -30,8 +35,7 @@ def prepare_django_request(request):
         'script_name': request.META['PATH_INFO'],
         'server_port': get_port(request),
         'get_data': request.GET.copy(),
-        # Uncomment if using ADFS as IdP, https://github.com/onelogin/python-saml/pull/144
-        # 'lowercase_urlencoding': True,
+        'lowercase_urlencoding': True,
         'post_data': request.POST.copy()
     }
     return result
@@ -47,11 +51,14 @@ def index(request):
     attributes = False
     paint_logout = False
 
+    # single sign on
     if 'sso' in req['get_data']:
         return HttpResponseRedirect(auth.login())
+    # single sign on 2
     elif 'sso2' in req['get_data']:
         return_to = OneLogin_Saml2_Utils.get_self_url(req) + reverse('attrs')
-        return HttpResponseRedirect(auth.login(return_to='https://www.aswwu.com'))
+        return HttpResponseRedirect(auth.login(return_to='/'))
+    # single log out
     elif 'slo' in req['get_data']:
         name_id = None
         session_index = None
@@ -61,6 +68,7 @@ def index(request):
             session_index = request.session['samlSessionIndex']
 
         return HttpResponseRedirect(auth.logout(name_id=name_id, session_index=session_index))
+    # attribute consumer service
     elif 'acs' in req['get_data']:
         auth.process_response()
         errors = auth.get_errors()
@@ -75,6 +83,7 @@ def index(request):
         else:
             if auth.get_settings().is_debug_active():
                 error_reason = auth.get_last_error_reason()
+    # single logout service
     elif 'sls' in req['get_data']:
         dscb = lambda: request.session.flush()
         url = auth.process_slo(delete_session_cb=dscb)
@@ -84,12 +93,30 @@ def index(request):
                 return HttpResponseRedirect(url)
             else:
                 success_slo = True
-
+    # logged in
     if 'samlUserdata' in request.session:
         paint_logout = True
         if len(request.session['samlUserdata']) > 0:
+            # get university SAML attributes 
             attributes = request.session['samlUserdata'].items()
-
+            attr_dict = request.session['samlUserdata']
+            # make request to python server
+            response = requests.post('https://aswwu.com/server/verify', {
+                'secret_key': os.getenv('SAML_KEY'),
+                'employee_id': attr_dict['employee_id'],
+                'full_name': attr_dict['full_name'],
+                'email_address': attr_dict['email_address']
+            })
+            cookies = response.headers['Set-Cookie'].split('; ')
+            cookie_dict = {}
+            for c in cookies:
+                s = c.split('=')
+                cookie_dict[s[0].lower()] = s[1]
+            print(cookie_dict)
+            response = HttpResponseRedirect('https://aswwu.com')
+            response.set_cookie('token', cookie_dict['token'], domain=cookie_dict['domain'], expires=cookie_dict['expires'], path=cookie_dict['path'])
+            return response
+    # page render
     return render(request, 'index.html', {'errors': errors, 'error_reason': error_reason, 'not_auth_warn': not_auth_warn, 'success_slo': success_slo,
                                           'attributes': attributes, 'paint_logout': paint_logout})
 

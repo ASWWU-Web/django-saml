@@ -9,6 +9,7 @@ verify_ssl = true
 python3-saml = "*"
 Django = "~=1.11"
 uwsgi = "*"
+requests = "*"
 
 [requires]
 python_version = "3.7"
