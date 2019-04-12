@@ -7,8 +7,8 @@ verify_ssl = true
 pylint = "*"
 
 [packages]
-python3-saml = "*"
-Django = "~=1.11"
+python3-saml = "~=1.6"
+Django = "~=2.2"
 uwsgi = "*"
 requests = "*"
 
