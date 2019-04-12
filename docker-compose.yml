@@ -4,6 +4,9 @@ services:
     environment:
       - DJANGO_ENV
       - DJANGO_SECRET_KEY
+      - SAML_KEY
+      - SAML_URL
+      - SITE_URL
     image: "aswwu/django-saml:${DJANGO_TAG}"
     build: .
     container_name: django_saml
