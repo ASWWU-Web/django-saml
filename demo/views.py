@@ -1,7 +1,5 @@
-import json
 import os
 import requests
-from http.cookies import SimpleCookie
 
 from django.conf import settings
 from django.urls import reverse
@@ -14,22 +12,29 @@ from onelogin.saml2.settings import OneLogin_Saml2_Settings
 from onelogin.saml2.utils import OneLogin_Saml2_Utils
 
 
-def init_saml_auth(req):
-    auth = OneLogin_Saml2_Auth(req, custom_base_path=settings.SAML_FOLDER)
-    return auth
-
-
 def get_port(request):
+    """
+    Helper function to determine which port is used by the proxy when listening
+    for SAML responses.
+    """
+    # check if behind proxy
     if settings.USE_X_FORWARDED_PORT and 'HTTP_X_FORWARDED_PORT' in request.META:
         port = request.META['HTTP_X_FORWARDED_PORT']
+    # use normal port if not behind proxy
     else:
         port = request.META['SERVER_PORT']
     return port
 
 
-def prepare_django_request(request):
-    # If server is behind proxys or balancers use the HTTP_X_FORWARDED fields
-    result = {
+def index(request):
+    """
+    The / page used to determine the SAML request type such as login or logout.
+    This page takes a blank query parameter for routing (SAML requires this) and
+    also a redirect query parameter to determine which page the user should be
+    sent back to on aswwu.com.
+    """
+    # django request
+    req = {
         'https': 'on' if request.is_secure() else 'off',
         'http_host': request.META['HTTP_HOST'],
         'script_name': request.META['PATH_INFO'],
@@ -38,12 +43,9 @@ def prepare_django_request(request):
         'lowercase_urlencoding': True,
         'post_data': request.POST.copy()
     }
-    return result
-
-
-def index(request):
-    req = prepare_django_request(request)
-    auth = init_saml_auth(req)
+    # SAML auth object
+    auth = OneLogin_Saml2_Auth(req, custom_base_path=settings.SAML_FOLDER)
+    # other attributes
     errors = []
     error_reason = None
     not_auth_warn = False
@@ -53,12 +55,12 @@ def index(request):
 
     # single sign on
     if 'sso' in req['get_data']:
-        return HttpResponseRedirect(auth.login())
-    # single sign on 2
-    elif 'sso2' in req['get_data']:
         return_to = OneLogin_Saml2_Utils.get_self_url(req) + reverse('attrs')
-        return HttpResponseRedirect(auth.login(return_to='/'))
-    # single log out
+        return_to = '/'
+        if 'redirect' in req['get_data']:
+            return_to += '?redirect={}'.format(req['get_data']['redirect'])
+        return HttpResponseRedirect(auth.login(return_to=return_to))
+    # single logout
     elif 'slo' in req['get_data']:
         name_id = None
         session_index = None
@@ -66,7 +68,6 @@ def index(request):
             name_id = request.session['samlNameId']
         if 'samlSessionIndex' in request.session:
             session_index = request.session['samlSessionIndex']
-
         return HttpResponseRedirect(auth.logout(name_id=name_id, session_index=session_index))
     # attribute consumer service
     elif 'acs' in req['get_data']:
@@ -96,32 +97,45 @@ def index(request):
     # logged in
     if 'samlUserdata' in request.session:
         paint_logout = True
+        # if SAML data exists
         if len(request.session['samlUserdata']) > 0:
-            # get university SAML attributes 
+            # get university SAML attributes
             attributes = request.session['samlUserdata'].items()
             attr_dict = request.session['samlUserdata']
             # make request to python server
-            response = requests.post('https://aswwu.com/server/verify', {
+            response = requests.post('https://{}/server/verify'.format(os.getenv('SITE_URL')), {
                 'secret_key': os.getenv('SAML_KEY'),
                 'employee_id': attr_dict['employee_id'],
                 'full_name': attr_dict['full_name'],
                 'email_address': attr_dict['email_address']
             })
+            # get the Set-Cookie header from the response
             cookies = response.headers['Set-Cookie'].split('; ')
+            # break the cookies into a dictionary
             cookie_dict = {}
             for c in cookies:
                 s = c.split('=')
                 cookie_dict[s[0].lower()] = s[1]
-            print(cookie_dict)
-            response = HttpResponseRedirect('https://aswwu.com')
+            # create redirect URL
+            redir_url = 'https://{}'.format(os.getenv('SITE_URL'))
+            if 'redirect' in req['get_data']:
+                redir_url += req['get_data']['redirect']
+            # create the redirect response and set the cookies in it
+            response = HttpResponseRedirect(redir_url)
             response.set_cookie('token', cookie_dict['token'], domain=cookie_dict['domain'], expires=cookie_dict['expires'], path=cookie_dict['path'])
             return response
-    # page render
+    # index page render
     return render(request, 'index.html', {'errors': errors, 'error_reason': error_reason, 'not_auth_warn': not_auth_warn, 'success_slo': success_slo,
                                           'attributes': attributes, 'paint_logout': paint_logout})
 
 
+# /attrs page
 def attrs(request):
+    """
+    The /attrs page used to show the user's SAML attributes.
+    The login workflow is not dependant on this endpoint
+    """
+
     paint_logout = False
     attributes = False
 
@@ -135,9 +149,10 @@ def attrs(request):
 
 
 def metadata(request):
-    # req = prepare_django_request(request)
-    # auth = init_saml_auth(req)
-    # saml_settings = auth.get_settings()
+    """
+    The /metadata page used by ADFS to learn about our service provider.
+    """
+
     saml_settings = OneLogin_Saml2_Settings(settings=None, custom_base_path=settings.SAML_FOLDER, sp_validation_only=True)
     metadata = saml_settings.get_sp_metadata()
     errors = saml_settings.validate_metadata(metadata)

@@ -15,7 +15,7 @@ import os
 # set security settings
 if os.getenv('DJANGO_ENV') == 'prod':
     DEBUG = True
-    ALLOWED_HOSTS = ['saml.aswwu.com']
+    ALLOWED_HOSTS = [os.getenv('SAML_URL')]
     SECURE_CONTENT_TYPE_NOSNIFF = True
     SECURE_BROWSER_XSS_FILTER = True
     SESSION_COOKIE_SECURE = True
