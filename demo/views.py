@@ -1,3 +1,8 @@
+"""
+Based on the demo from OneLogin's python3-saml toolkit (https://github.com/onelogin/python3-saml).
+Modified tby Sheldon Woodward, Spring 2019.
+"""
+
 import os
 import requests
 
