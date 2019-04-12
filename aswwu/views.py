@@ -140,10 +140,9 @@ def attrs(request):
     The /attrs page used to show the user's SAML attributes.
     The login workflow is not dependant on this endpoint
     """
-
     paint_logout = False
     attributes = False
-
+    # check if logged in
     if 'samlUserdata' in request.session:
         paint_logout = True
         if len(request.session['samlUserdata']) > 0:
@@ -157,11 +156,11 @@ def metadata(request):
     """
     The /metadata page used by ADFS to learn about our service provider.
     """
-
+    # prepare the metadata
     saml_settings = OneLogin_Saml2_Settings(settings=None, custom_base_path=settings.SAML_FOLDER, sp_validation_only=True)
     metadata = saml_settings.get_sp_metadata()
     errors = saml_settings.validate_metadata(metadata)
-
+    # check for errors
     if len(errors) == 0:
         resp = HttpResponse(content=metadata, content_type='text/xml')
     else:
