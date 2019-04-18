@@ -4,11 +4,13 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+pylint = "*"
 
 [packages]
-python3-saml = "*"
-Django = "~=1.11"
+python3-saml = "~=1.6"
+Django = "~=2.2"
 uwsgi = "*"
+requests = "*"
 
 [requires]
-python_version = "3.6"
+python_version = "3.7"

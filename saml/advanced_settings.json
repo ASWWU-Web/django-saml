@@ -4,14 +4,14 @@
         "authnRequestsSigned": false,
         "logoutRequestSigned": false,
         "logoutResponseSigned": false,
-        "signMetadata": false,
+        "signMetadata": true,
         "wantMessagesSigned": false,
         "wantAssertionsSigned": true,
         "wantNameId" : true,
-        "wantNameIdEncrypted": true,
+        "wantNameIdEncrypted": false,
         "wantAssertionsEncrypted": true,
         "signatureAlgorithm": "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256",
-        "digestAlgorithm": "http://www.w3.org/2000/09/xmldsig#sha1"
+        "digestAlgorithm": "http://www.w3.org/2001/04/xmlenc#sha256"
     },
     "contactPerson": {
         "technical": {

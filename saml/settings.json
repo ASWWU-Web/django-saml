@@ -1,6 +1,6 @@
 {
     "strict": true,
-    "debug": true,
+    "debug": false,
     "sp": {
         "entityId": "https://saml.aswwu.com/metadata/",
         "assertionConsumerService": {
@@ -11,12 +11,12 @@
             "url": "https://saml.aswwu.com/?sls",
             "binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
         },
-        "NameIDFormat": "urn:oasis:names:tc:SAML:2.0:nameid-format:persistent",
+        "NameIDFormat": "urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified",
         "x509cert": "",
         "privateKey": ""
     },
     "idp": {
-        "entityId": "https://adfs.wallawalla.edu/adfs/services/trust",
+        "entityId": "http://adfs.wallawalla.edu/adfs/services/trust",
         "singleSignOnService": {
             "url": "https://adfs.wallawalla.edu/adfs/ls/",
             "binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
